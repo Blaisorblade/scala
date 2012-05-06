@@ -62,7 +62,7 @@ abstract class GenJVM extends SubComponent with GenJVMUtil with GenAndroid with 
       val sym = clasz.symbol
       def fail(msg: String, pos: Position = sym.pos) = {
         clasz.cunit.warning(sym.pos,
-          sym.name + " has a main method with parameter type Array[String], but " + sym.fullName('.') + " will not be a runnable program.\n" +
+          sym.name + " has a main method with parameter type Array[String], but " + sym.fullName('.') + " will not be runnable without assistance.\n" +
           "  Reason: " + msg
           // TODO: make this next claim true, if possible
           //   by generating valid main methods as static in module classes
@@ -106,7 +106,7 @@ abstract class GenJVM extends SubComponent with GenJVMUtil with GenAndroid with 
                 if (res.typeSymbol :: params exists (_.isAbstractType))
                   fail("main methods cannot refer to type parameters or abstract types.", m.pos)
                 else
-                  isJavaMainMethod(m) || fail("main method must have exact signature (Array[String])Unit", m.pos)
+                  isJavaMainMethod(m) || fail("main method must have exact signature (Array[String])Unit.  Signature found: " + m.defString, m.pos)
               case tp =>
                 fail("don't know what this is: " + tp, m.pos)
             }
@@ -1126,8 +1126,15 @@ abstract class GenJVM extends SubComponent with GenJVMUtil with GenAndroid with 
 
       addRemoteException(mirrorMethod, m)
       // only add generic signature if the method is concrete; bug #1745
-      if (!m.isDeferred)
-        addGenericSignature(mirrorMethod, m, module)
+      if (!m.isDeferred) {
+        val clazz = module.linkedClassOfClass
+        val m1 = (
+          if ((clazz.info member m.name) eq NoSymbol)
+            beforeErasure(m.cloneSymbol(clazz, Flags.METHOD | Flags.STATIC))
+          else m
+        )
+        addGenericSignature(mirrorMethod, m1, clazz)
+      }
 
       val (throws, others) = m.annotations partition (_.symbol == ThrowsClass)
       addExceptionsAttribute(mirrorMethod, throws)
