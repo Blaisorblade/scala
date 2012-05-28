@@ -161,6 +161,8 @@ abstract class Mixin extends InfoTransform with ast.TreeDSL {
     debuglog("new member of " + clazz + ":" + member.defString)
     clazz.info.decls enter member setFlag MIXEDIN
   }
+
+  /** Params: we are mixing in member mixinMember of implementation class mixinClass into class clazz. */
   /** Warning: subtle issues at play!
    *  The info of the cloned symbol used to be calculated as:
    *    (clazz.thisType baseType mixinClass) memberInfo mixinMember
