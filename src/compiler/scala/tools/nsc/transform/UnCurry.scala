@@ -84,6 +84,7 @@ abstract class UnCurry extends InfoTransform
     private var inPattern         = false
     private var inConstructorFlag = 0L
     private val byNameArgs        = mutable.HashSet[Tree]()
+    private val inByNameCallSite  = mutable.HashSet[Tree]()
     private val noApply           = mutable.HashSet[Tree]()
     private val newMembers        = mutable.Map[Symbol, mutable.Buffer[Tree]]()
     private val repeatedParams    = mutable.Map[Symbol, List[ValDef]]()
@@ -212,7 +213,8 @@ abstract class UnCurry extends InfoTransform
 
     /** Undo eta expansion for parameterless and nullary methods */
     def deEta(fun: Function): Tree = fun match {
-      case Function(List(), Apply(expr, List())) if treeInfo.isExprSafeToInline(expr) =>
+      case Function(List(), appl @ Apply(expr, List())) if treeInfo.isExprSafeToInline(expr) && !inByNameCallSite(appl) =>
+        println("inByNameCallSite(appl) = %s, appl = %s" format (inByNameCallSite(appl), appl))
         if (expr hasSymbolWhich (_.isLazy))
           fun
         else
@@ -479,23 +481,27 @@ abstract class UnCurry extends InfoTransform
       map2(formals, args1) { (formal, arg) =>
         if (!isByNameParamType(formal))
           arg
-        else if (isByNameRef(arg)) {
-          byNameArgs += arg
-          arg setType functionType(Nil, arg.tpe)
-        }
         else {
-          log("byname | %s | %s | %s".format(
-            arg.pos.source.path + ":" + arg.pos.line, fun.fullName,
-            if (fun.isPrivate) "private" else "")
-          )
+          println("Adding arg = %s" format arg)
+          inByNameCallSite += arg
+          if (isByNameRef(arg)) {
+            byNameArgs += arg
+            arg setType functionType(Nil, arg.tpe)
+          }
+          else {
+            log("byname | %s | %s | %s".format(
+              arg.pos.source.path + ":" + arg.pos.line, fun.fullName,
+              if (fun.isPrivate) "private" else "")
+            )
 
-          arg match {
-            // don't add a thunk for by-name argument if argument already is an application of
-            // a Function0. We can then remove the application and use the existing Function0.
-            case Apply(Select(recv, nme.apply), Nil) if recv.tpe.typeSymbol isSubClass FunctionClass(0) =>
-              recv
-            case _ =>
-              newFunction0(arg)
+            arg match {
+              // don't add a thunk for by-name argument if argument already is an application of
+              // a Function0. We can then remove the application and use the existing Function0.
+              case Apply(Select(recv, nme.apply), Nil) if recv.tpe.typeSymbol isSubClass FunctionClass(0) =>
+                recv
+              case _ =>
+                newFunction0(arg)
+            }
           }
         }
       }
