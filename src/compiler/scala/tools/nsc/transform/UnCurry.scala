@@ -213,9 +213,10 @@ abstract class UnCurry extends InfoTransform
 
     /** Undo eta expansion for parameterless and nullary methods */
     def deEta(fun: Function): Tree = fun match {
-      case Function(List(), appl @ Apply(expr, List())) if treeInfo.isExprSafeToInline(expr) && !inByNameCallSite(appl) =>
-        println("inByNameCallSite(appl) = %s, appl = %s" format (inByNameCallSite(appl), appl))
-        if (expr hasSymbolWhich (_.isLazy))
+      case Function(List(), appl @ Apply(expr, List())) if treeInfo.isExprSafeToInline(expr) =>
+        Console.err.println("inByNameCallSite(appl) = %s, appl = %s, expr = %s, expr.tpe = %s, safeToInline = %s" format (inByNameCallSite(appl), appl, expr, expr.tpe, treeInfo.isExprSafeToInline(expr)))
+        throw new Throwable()
+        if ((expr hasSymbolWhich (_.isLazy)) || inByNameCallSite(appl))
           fun
         else
           expr
@@ -482,7 +483,7 @@ abstract class UnCurry extends InfoTransform
         if (!isByNameParamType(formal))
           arg
         else {
-          println("Adding arg = %s" format arg)
+          //println("Adding arg = %s" format arg)
           inByNameCallSite += arg
           if (isByNameRef(arg)) {
             byNameArgs += arg
