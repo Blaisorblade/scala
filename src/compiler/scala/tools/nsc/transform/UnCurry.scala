@@ -200,7 +200,9 @@ abstract class UnCurry extends InfoTransform with TypingTransformers {
 
     /** Undo eta expansion for parameterless and nullaray methods */
     def deEta(fun: Function): Tree = fun match {
-      case Function(List(), Apply(expr, List())) if treeInfo.isPureExpr(expr) =>
+      case Function(List(), appl @ Apply(expr, List())) if treeInfo.isPureExpr(expr) =>
+        Console.err.println(String.format("appl = %s, expr = %s, expr.tpe = %s, safeToInline = %s", Array(appl, expr, expr.tpe, boolean2Boolean(treeInfo.isPureExpr(expr)))))
+        throw new Throwable()
         expr
       case Function(List(), expr) if isByNameRef(expr) =>
         noApply += expr
