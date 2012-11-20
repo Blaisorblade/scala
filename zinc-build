@@ -5,7 +5,15 @@ elapsedTime () {
   ( TIMEFORMAT='%3R' && time eval "$@" || exit $? ) 2>&1 1>/dev/null | tail -1
 }
 
-BOOTSTRAP=/scala/inst/210
+if [[ -n $SCALA_HOME ]]; then
+  BOOTSTRAP="$SCALA_HOME"
+elif [[ -f ./build/pack/lib/scala-compiler.jar ]]; then
+  BOOTSTRAP="$(pwd)/build/pack"
+else
+  echo "Can't find bootstrap libraries; complete an ant build and it will use build/pack, or set SCALA_HOME"
+  exit 1
+fi
+
 ANT=$(ant -diagnostics |grep ^ant.core.lib | sed 's/^ant.core.lib: //')
 ASM=build/locker/classes/asm
 AUXCP=$ASM:$ANT:lib/msil.jar:lib/forkjoin.jar:lib/jline.jar:lib/fjbg.jar
