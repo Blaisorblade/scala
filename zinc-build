@@ -30,6 +30,20 @@ run () {
   "$@"
 }
 
+cpof() {
+  jars () {
+    for path in "$@"; do
+      [[ -e "$path" ]] && {
+        find "$path" -name '*.jar' -print
+        find "$path" -maxdepth 1 -type d -print
+      }
+    done
+  }
+
+  results=$(jars "$@")
+  [[ -n $results ]] && ( set $results && IFS=: && echo "$*" )
+}
+
 compile () {
   local layer="$1"
   local scalaHome="$2"
