@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 abstract class MainNode<K, V> extends BasicNode {
     
+    @SuppressWarnings("rawtypes")
     public static final AtomicReferenceFieldUpdater<MainNode, MainNode> updater = AtomicReferenceFieldUpdater.newUpdater(MainNode.class, MainNode.class, "prev");
     
     public volatile MainNode<K, V> prev = null;
@@ -32,9 +33,10 @@ abstract class MainNode<K, V> extends BasicNode {
     
     // do we need this? unclear in the javadocs...
     // apparently not - volatile reads are supposed to be safe
-    // irregardless of whether there are concurrent ARFU updates
+    // regardless of whether there are concurrent ARFU updates
+    @SuppressWarnings("unchecked")
     public MainNode<K, V> READ_PREV() {
-	return updater.get(this);
+	return (MainNode<K, V>) updater.get(this);
     }
     
 }
