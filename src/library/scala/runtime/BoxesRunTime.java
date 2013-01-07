@@ -10,7 +10,6 @@
 
 package scala.runtime;
 
-import java.io.*;
 import scala.math.ScalaNumber;
 
 /** An object (static class) that defines methods used for creating,
@@ -44,10 +43,6 @@ public final class BoxesRunTime
         return OTHER;
     }
 
-    private static String boxDescription(Object a) {
-      return "" + a.getClass().getSimpleName() + "(" + a + ")";
-    }
-
 /* BOXING ... BOXING ... BOXING ... BOXING ... BOXING ... BOXING ... BOXING ... BOXING */
 
     public static java.lang.Boolean boxToBoolean(boolean b) {
@@ -79,8 +74,6 @@ public final class BoxesRunTime
     }
 
     public static java.lang.Double boxToDouble(double d) {
-        // System.out.println("box " + d);
-        // (new Throwable()).printStackTrace();
         return java.lang.Double.valueOf(d);
     }
 
@@ -115,7 +108,6 @@ public final class BoxesRunTime
     }
 
     public static double unboxToDouble(Object d) {
-        //        System.out.println("unbox " + d);
         return d == null ? 0.0d : ((java.lang.Double)d).doubleValue();
     }
 

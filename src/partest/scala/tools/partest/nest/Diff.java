@@ -305,7 +305,6 @@ public class Diff {
 
 	int d = diag (xoff, xlim, yoff, ylim);
 	int c = cost;
-	int f = fdiag[fdiagoff + d];
 	int b = bdiag[bdiagoff + d];
 
 	if (c == 1)
@@ -320,7 +319,7 @@ public class Diff {
 	  {
 	    /* Use that point to split this problem into two subproblems.  */
 	    compareseq (xoff, b, yoff, b - d);
-	    /* This used to use f instead of b,
+	    /* This used to use fdiag[fdiagoff + d] instead of b,
 	       but that is incorrect!
 	       It is not necessarily the case that diagonal d
 	       has a snake from b to f.  */
