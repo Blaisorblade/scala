@@ -8,6 +8,7 @@ package typechecker
 
 import symtab.Flags._
 import scala.collection.mutable.ListBuffer
+import scala.language.postfixOps
 
 /** Synthetic method implementations for case classes and case objects.
  *

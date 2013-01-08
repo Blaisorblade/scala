@@ -10,6 +10,7 @@ import scala.annotation.{ switch, meta }
 import scala.collection.{ mutable, immutable }
 import Flags._
 import scala.reflect.api.{Universe => ApiUniverse}
+import scala.language.postfixOps
 
 trait Definitions extends api.StandardDefinitions {
   self: SymbolTable =>

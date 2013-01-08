@@ -24,6 +24,8 @@ import scala.reflect.runtime.{ universe => ru }
 import scala.reflect.{ ClassTag, classTag }
 import scala.tools.reflect.StdRuntimeTags._
 
+import scala.language.implicitConversions
+
 /** An interpreter for Scala code.
  *
  *  The main public entry points are compile(), interpret(), and bind().

@@ -17,6 +17,7 @@ import scala.reflect.internal.util.{ BatchSourceFile, Statistics, shortClassOfIn
 import mutable.ListBuffer
 import symtab.Flags._
 import Mode._
+import scala.language.postfixOps
 
 // Suggestion check whether we can do without priming scopes with symbols of outer scopes,
 // like the IDE does.

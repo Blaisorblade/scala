@@ -11,6 +11,7 @@ import java.util.jar._
 import scala.collection.JavaConverters._
 import Attributes.Name
 import scala.language.implicitConversions
+import scala.language.postfixOps
 
 // Attributes.Name instances:
 //
