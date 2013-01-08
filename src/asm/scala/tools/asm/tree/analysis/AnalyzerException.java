@@ -39,6 +39,7 @@ import scala.tools.asm.tree.AbstractInsnNode;
  */
 public class AnalyzerException extends Exception {
 
+    private static final long serialVersionUID = -8611165504113425576L;
     public final AbstractInsnNode node;
 
     public AnalyzerException(final AbstractInsnNode node, final String msg) {

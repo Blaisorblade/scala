@@ -16,6 +16,7 @@ package scala.math;
  *  @since 2.8
  */
 public abstract class ScalaNumber extends java.lang.Number {
+  private static final long serialVersionUID = 1325702457584418945L;
   protected abstract boolean isWhole();
   public abstract Object underlying();
 }
