@@ -173,8 +173,7 @@ trait ContextErrors {
         assert(!foundType.isErroneous && !req.isErroneous, (foundType, req))
 
         issueNormalTypeError(tree, withAddendum(tree.pos)(typeErrorMsg(foundType, req, infer.isPossiblyMissingArgs(foundType, req))) )
-        if (settings.explaintypes.value)
-          explainTypes(foundType, req)
+        infer.explainTypes(foundType, req)
       }
 
       def WithFilterError(tree: Tree, ex: AbsTypeError) = {
