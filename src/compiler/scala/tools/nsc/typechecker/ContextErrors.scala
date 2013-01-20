@@ -173,7 +173,7 @@ trait ContextErrors {
         assert(!foundType.isErroneous && !req.isErroneous, (foundType, req))
 
         issueNormalTypeError(tree, withAddendum(tree.pos)(typeErrorMsg(foundType, req, infer.isPossiblyMissingArgs(foundType, req))) )
-        if (settings.explaintypes.value)
+        if (context.reportErrors) //XXX: Why does this *not* go through Infer.explainTypes?
           explainTypes(foundType, req)
       }
 
