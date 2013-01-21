@@ -1271,7 +1271,10 @@ trait ContextErrors {
     // and I dearly wanted to push it away from Macros.scala
     private def checkSubType(slot: String, rtpe: Type, atpe: Type) = {
       val ok = if (macroDebugVerbose) {
-        if (rtpe eq atpe) println(rtpe + " <: " + atpe + "?" + EOL + "true")
+        if (rtpe eq atpe)
+          explain[Type]("<:", (_, _) => true, rtpe, atpe) //better, but this is just here to workaround a bug
+          //of <:<
+//          println(rtpe + " <: " + atpe + "?" + EOL + "true")
         withTypesExplained(rtpe <:< atpe)
       } else rtpe <:< atpe
       if (!ok) {

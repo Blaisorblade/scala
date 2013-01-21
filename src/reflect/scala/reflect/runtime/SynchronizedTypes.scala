@@ -69,7 +69,7 @@ private[reflect] trait SynchronizedTypes extends internal.Types { self: SymbolTa
 
   private object indentLock
 
-  override protected def explain[T](op: String, p: (Type, T) => Boolean, tp1: Type, arg2: T): Boolean = {
+  override def explain[T](op: String, p: (Type, T) => Boolean, tp1: Type, arg2: T): Boolean = {
     indentLock.synchronized { super.explain(op, p, tp1, arg2) }
   }
 
