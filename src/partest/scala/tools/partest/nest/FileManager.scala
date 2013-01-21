@@ -69,7 +69,13 @@ trait FileManager extends FileUtil {
   var showLog = false
   var failed = false
 
+  def split(opts: String) = opts.split(' ').toSeq
   var SCALAC_OPTS = PartestDefaults.scalacOpts.split(' ').toSeq
+
+  //Other such properties should be added if needed.
+  var SCALAC_POS_OPTS = split(PartestDefaults.scalacPosOpts)
+  var SCALAC_RUN_OPTS = split(PartestDefaults.scalacRunOpts)
+
   var JAVA_OPTS   = PartestDefaults.javaOpts
   var timeout     = PartestDefaults.timeout
 

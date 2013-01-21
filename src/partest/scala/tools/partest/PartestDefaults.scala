@@ -21,6 +21,10 @@ object PartestDefaults {
   def javaOpts    = propOrElse("partest.java_opts", "")
   def scalacOpts  = propOrElse("partest.scalac_opts", "")
 
+  //Other such properties should be added if needed.
+  def scalacPosOpts  = propOrElse("partest.scalac_pos_opts", "")
+  def scalacRunOpts  = propOrElse("partest.scalac_run_opts", "")
+
   def testBuild  = propOrNone("partest.build")
   def errorCount = propOrElse("partest.errors", "0").toInt
   def numThreads = propOrNone("partest.threads") map (_.toInt) getOrElse getRuntime.availableProcessors

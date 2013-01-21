@@ -124,7 +124,12 @@ class DirectCompiler(val fileManager: FileManager) extends SimpleCompiler {
       localArgString.split(' ').toList.filter(_.length > 0)
     } else List()
 
-    val allOpts = fileManager.SCALAC_OPTS.toList ::: argString.split(' ').toList.filter(_.length > 0) ::: localFlagsList
+    val kindSpecificOpts = (kind match {
+      case "pos" => fileManager.SCALAC_POS_OPTS
+      case "run" => fileManager.SCALAC_RUN_OPTS
+      case _ => List()
+    }).toList
+    val allOpts = fileManager.SCALAC_OPTS.toList ::: kindSpecificOpts ::: argString.split(' ').toList.filter(_.length > 0) ::: localFlagsList
     val args = allOpts.toList
 
     NestUI.verbose("scalac options: "+allOpts)
