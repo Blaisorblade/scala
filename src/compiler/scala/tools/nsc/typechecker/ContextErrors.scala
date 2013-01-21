@@ -1270,13 +1270,11 @@ trait ContextErrors {
     // not exactly an error generator, but very related
     // and I dearly wanted to push it away from Macros.scala
     private def checkSubType(slot: String, rtpe: Type, atpe: Type) = {
-      val ok = if (macroDebugVerbose) {
-        if (rtpe eq atpe)
-          explain[Type]("<:", (_, _) => true, rtpe, atpe) //better, but this is just here to workaround a bug
-          //of <:<
-//          println(rtpe + " <: " + atpe + "?" + EOL + "true")
-        withTypesExplained(rtpe <:< atpe)
-      } else rtpe <:< atpe
+      val ok =
+        if (macroDebugVerbose)
+          withTypesExplained(rtpe <:< atpe)
+        else
+          rtpe <:< atpe
       if (!ok) {
         explainTypes(rtpe, atpe)
         compatibilityError("type mismatch for %s: %s does not conform to %s".format(slot, abbreviateCoreAliases(rtpe.toString), abbreviateCoreAliases(atpe.toString)))

@@ -820,11 +820,8 @@ trait Types extends api.Types { self: SymbolTable =>
     /** Is this type a subtype of that type? */
     def <:<(that: Type): Boolean = {
       if (Statistics.canEnable) stat_<:<(that)
-      else {
-        (this eq that) ||
-        (if (explainSwitch) explain("<:", isSubType, this, that)
-         else isSubType(this, that, AnyDepth))
-      }
+      else if (explainSwitch) explain("<:", isEqOrSubType, this, that)
+      else isEqOrSubType(this, that)
     }
 
     /** Is this type a subtype of that type in a pattern context?
@@ -5393,6 +5390,7 @@ trait Types extends api.Types { self: SymbolTable =>
   private var basetypeRecursions: Int = 0
   private val pendingBaseTypes = new mutable.HashSet[Type]
 
+  private def isEqOrSubType(tp1: Type, tp2: Type): Boolean = (tp1 eq tp2) || isSubType(tp1, tp2)
   def isSubType(tp1: Type, tp2: Type): Boolean = isSubType(tp1, tp2, AnyDepth)
 
   def isSubType(tp1: Type, tp2: Type, depth: Int): Boolean = try {
