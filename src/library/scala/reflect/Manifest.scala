@@ -34,7 +34,7 @@ import scala.collection.mutable.{ ArrayBuilder, WrappedArray }
   def retType[T: ClassManifest](name: String) =
     methods[T] find (_.getName == name) map (_.getGenericReturnType)
 
-  retType[Map[_, _]]("values")  // Some(scala.collection.Iterable<B>)
+  retType[Map[_, _]]("values")  // Some(scala.collection.Iterable&lt;B&gt;)
 }}}
  *
  */
