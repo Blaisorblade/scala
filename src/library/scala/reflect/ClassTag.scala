@@ -68,7 +68,7 @@ trait ClassTag[T] extends ClassManifestDeprecatedApis[T] with Equals with Serial
    * `SomeExtractor(...)` is turned into `ct(SomeExtractor(...))` if `T` in `SomeExtractor.unapply(x: T)`
    * is uncheckable, but we have an instance of `ClassTag[T]`.
    */
-  def unapply(x: Any): Option[T] =
+  final def unapply(x: Any): Option[T] =
     if (null != x && (
             (runtimeClass.isInstance(x))
          || (x.isInstanceOf[Byte]    && runtimeClass.isAssignableFrom(classOf[Byte]))
